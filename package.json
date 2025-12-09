@@ -1,0 +1,20 @@
+{
+    "name": "rudolph-the-narc",
+    "description": "A festive arcade game where Rudolph patrols Santa's workshop, intercepting elves smuggling contraband snow while avoiding wrongful arrests of innocent gift-carriers.",
+    "version": "1.0.0",
+    "author": "Michael Mulqueen",
+    "license": "MIT",
+    "scripts": {
+        "dev": "vite --config vite/config.dev.mjs",
+        "build": "vite build --config vite/config.prod.mjs",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "~5.7.2",
+        "vite": "^6.3.1"
+    },
+    "dependencies": {
+        "phaser": "^3.90.0",
+        "terser": "^5.39.0"
+    }
+}
