@@ -45,9 +45,25 @@ export class Preloader extends Scene {
         // Load background tile
         this.load.setPath('assets');
         this.load.image('bg_tile', 'bg_tile.png');
+
+        // Load MDI icons
+        this.load.setPath('assets/mdi-icons');
+        this.load.svg('icon_github', 'github.svg');
+        this.load.svg('icon_qrcode', 'qrcode.svg');
+        this.load.svg('icon_arrow_left', 'arrow-left-bold.svg');
+        this.load.svg('icon_arrow_right', 'arrow-right-bold.svg');
+        this.load.svg('icon_alarm', 'alarm-light.svg');
     }
 
     create() {
+        // Create white particle texture for powder burst effect
+        const particleSize = 4 * SCALE_FACTOR;
+        const graphics = this.make.graphics({ x: 0, y: 0 });
+        graphics.fillStyle(0xffffff, 1);
+        graphics.fillRect(0, 0, particleSize, particleSize);
+        graphics.generateTexture('particle_white', particleSize, particleSize);
+        graphics.destroy();
+
         // Create walking animations (2 frames each, looping)
         const sprites = [
             'rudolph_patrol',

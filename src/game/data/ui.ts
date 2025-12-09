@@ -1,23 +1,25 @@
-import { SCALE_FACTOR } from './dimensions';
+import { SCALE_FACTOR, PLAYABLE_HEIGHT } from './dimensions';
 
 // UI Layout Constants
 
 // MainMenu layout
 export const MENU_LAYOUT = {
-    TITLE_Y: 60 * SCALE_FACTOR,
-    RUDOLPH_PREVIEW_Y: 160 * SCALE_FACTOR,
-    TAGLINE_Y: 230 * SCALE_FACTOR,
-    PLAY_BUTTON_Y: 290 * SCALE_FACTOR,
-    HOWTO_BUTTON_Y: 345 * SCALE_FACTOR,
+    TITLE_Y: 50 * SCALE_FACTOR,
+    RUDOLPH_PREVIEW_Y: 130 * SCALE_FACTOR,
+    TAGLINE_Y: 195 * SCALE_FACTOR,
+    PLAY_BUTTON_Y: 255 * SCALE_FACTOR,
+    HOWTO_BUTTON_Y: 305 * SCALE_FACTOR,
     BUTTON_WIDTH: 140 * SCALE_FACTOR,
     BUTTON_HEIGHT: 40 * SCALE_FACTOR,
+    QR_MARGIN: 8 * SCALE_FACTOR,
+    QR_POPUP_SIZE: 180 * SCALE_FACTOR,
 } as const;
 
 // GameOver layout
 export const GAME_OVER_LAYOUT = {
-    TITLE_Y: 150 * SCALE_FACTOR,
-    SCORE_Y: 250 * SCALE_FACTOR,
-    RESTART_PROMPT_Y: 380 * SCALE_FACTOR,
+    TITLE_Y: 120 * SCALE_FACTOR,
+    SCORE_Y: 180 * SCALE_FACTOR,
+    RESTART_PROMPT_Y: 300 * SCALE_FACTOR,
 } as const;
 
 // Intro layout
@@ -26,21 +28,23 @@ export const INTRO_LAYOUT = {
     BODY_START_Y: 100 * SCALE_FACTOR,
     BODY_LINE_HEIGHT: 14 * SCALE_FACTOR,
     SKIP_MARGIN: 8 * SCALE_FACTOR,
-    CONTINUE_Y: 250 * SCALE_FACTOR,
+    CONTINUE_Y: PLAYABLE_HEIGHT - 20 * SCALE_FACTOR,
+    OVERLAY_PADDING: 10 * SCALE_FACTOR,
+    OVERLAY_ALPHA: 0.7,
     ELF_POSITIONS_SLIDE_0: [
-        { x: 40 * SCALE_FACTOR, y: 320 * SCALE_FACTOR },
-        { x: 100 * SCALE_FACTOR, y: 400 * SCALE_FACTOR },
-        { x: 160 * SCALE_FACTOR, y: 280 * SCALE_FACTOR },
-        { x: 216 * SCALE_FACTOR, y: 360 * SCALE_FACTOR }
+        { x: 40 * SCALE_FACTOR, y: 280 * SCALE_FACTOR },
+        { x: 100 * SCALE_FACTOR, y: 340 * SCALE_FACTOR },
+        { x: 160 * SCALE_FACTOR, y: 260 * SCALE_FACTOR },
+        { x: 200 * SCALE_FACTOR, y: 310 * SCALE_FACTOR }
     ],
     ELF_POSITIONS_SLIDE_3: [
-        { type: 'elf_teddy', x: 32 * SCALE_FACTOR, y: 320 * SCALE_FACTOR },
-        { type: 'elf_candy', x: 96 * SCALE_FACTOR, y: 380 * SCALE_FACTOR },
-        { type: 'elf_coal', x: 160 * SCALE_FACTOR, y: 290 * SCALE_FACTOR },
-        { type: 'elf_nothing', x: 224 * SCALE_FACTOR, y: 350 * SCALE_FACTOR }
+        { type: 'elf_teddy', x: 32 * SCALE_FACTOR, y: 280 * SCALE_FACTOR },
+        { type: 'elf_candy', x: 80 * SCALE_FACTOR, y: 330 * SCALE_FACTOR },
+        { type: 'elf_coal', x: 144 * SCALE_FACTOR, y: 260 * SCALE_FACTOR },
+        { type: 'elf_nothing', x: 192 * SCALE_FACTOR, y: 300 * SCALE_FACTOR }
     ],
-    PURSUIT_ELF_Y: 280 * SCALE_FACTOR,
-    PURSUIT_RUDOLPH_Y: 340 * SCALE_FACTOR,
+    PURSUIT_ELF_Y: 250 * SCALE_FACTOR,
+    PURSUIT_RUDOLPH_Y: 300 * SCALE_FACTOR,
 } as const;
 
 // Common UI values

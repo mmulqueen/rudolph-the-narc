@@ -1,6 +1,16 @@
 # Rudolph the Narc
 
+**[Play the game](https://michael.mulqueen.me.uk/2025/rudolph-the-narc/)** | **[GitHub](https://github.com/mmulqueen/rudolph-the-narc)**
+
 The North Pole has got a problem with white powder. Santa has been burning the advent candle at both ends and now a toxic snow-snorting culture has taken over the workshop. Mrs. Claus has tried to ban all frozen products from the workshop, but the pull of the flakes is strong. Noses are getting frozen off and the reindeers are angry that their carrot supply is being diverted to make nasal prostheses. Straight-edged Rudolph has had enough, he's putting his hoof down. Can you help Rudolph save Christmas? Patrol the workshop, intercept any snowy contraband, but don't disrupt the legitimate Christmas supplies.
+
+## About
+
+This game was created for the festive show and tell at the [Brighton codebar](https://codebar.io/brighton) Christmas party. Codebar is a charity that runs free programming workshops to help underrepresented groups get into tech.
+
+### How it was made
+
+I came up with the concept and planned this game. The pixel art assets were created using [Pixelorama](https://orama-interactive.itch.io/pixelorama), a free and open source sprite editor. UI icons from [Material Design Icons](https://pictogrammers.com/library/mdi/). [Claude Code](https://claude.com/product/claude-code) was used for boilerplate and refactoring.
 
 ## Gameplay
 
@@ -56,8 +66,8 @@ Located in `public/assets/sprites/`. Sprite sheets are two frames side by side (
 
 ## Technical Details
 
-- Canvas: 256x396 logical resolution (playable area: 256x355, controls: 256x41)
-- 8 horizontal positions (32px lanes)
+- Canvas: 224x350 logical resolution (playable area: 224x309, controls: 224x41)
+- 7 horizontal lanes (32px each)
 - Canvas centred on screen, scaled to fit (CSS contain behavior)
 - Maximum 1 elf per horizontal position at a time
 - Elves spawn with randomised speeds

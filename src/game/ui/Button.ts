@@ -12,6 +12,10 @@ export interface ButtonConfig {
     hoverColour?: number;
     label?: string;
     labelStyle?: Phaser.Types.GameObjects.Text.TextStyle;
+    /** Icon texture key (used instead of label if provided) */
+    icon?: string;
+    /** Icon display size (defaults to height * 0.6) */
+    iconSize?: number;
     onClick?: () => void;
     /** Called when button is pressed down */
     onPress?: () => void;
@@ -23,6 +27,7 @@ export interface ButtonConfig {
 export interface ButtonObjects {
     rect: GameObjects.Rectangle;
     text?: GameObjects.Text;
+    icon?: GameObjects.Image;
     isPressed: Ref<boolean>;
 }
 
@@ -37,6 +42,8 @@ export function createButton(config: ButtonConfig): ButtonObjects {
         hoverColour,
         label,
         labelStyle,
+        icon,
+        iconSize,
         onClick,
         onPress,
         onRelease,
@@ -46,7 +53,12 @@ export function createButton(config: ButtonConfig): ButtonObjects {
     const rect = scene.add.rectangle(x, y, width, height, colour).setInteractive();
 
     let text: GameObjects.Text | undefined;
-    if (label) {
+    let iconImage: GameObjects.Image | undefined;
+
+    if (icon) {
+        const size = iconSize ?? height * 0.6;
+        iconImage = scene.add.image(x, y, icon).setDisplaySize(size, size);
+    } else if (label) {
         const style = labelStyle ?? TEXT_STYLES.BUTTON;
         text = scene.add.text(x, y, label, style).setOrigin(0.5);
     }
@@ -79,5 +91,5 @@ export function createButton(config: ButtonConfig): ButtonObjects {
         }
     });
 
-    return { rect, text, isPressed };
+    return { rect, text, icon: iconImage, isPressed };
 }

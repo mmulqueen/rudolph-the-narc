@@ -73,10 +73,33 @@ export class Intro extends Scene {
         this.slideElements.push(title);
 
         // Body text (on top of visuals)
+        const bodyTexts: Phaser.GameObjects.Text[] = [];
         slide.lines.forEach((line, i) => {
             const text = this.add.text(CENTRE_X, INTRO_LAYOUT.BODY_START_Y + (i * INTRO_LAYOUT.BODY_LINE_HEIGHT), line, TEXT_STYLES.INTRO_BODY).setOrigin(0.5);
             this.slideElements.push(text);
+            bodyTexts.push(text);
         });
+
+        // Dark overlay sized to fit body text bounding box
+        const firstBodyText = bodyTexts[0];
+        const lastBodyText = bodyTexts[bodyTexts.length - 1];
+        const overlayTop = firstBodyText.y - firstBodyText.height / 2 - INTRO_LAYOUT.OVERLAY_PADDING;
+        const overlayBottom = lastBodyText.y + lastBodyText.height / 2 + INTRO_LAYOUT.OVERLAY_PADDING;
+        const overlayHeight = overlayBottom - overlayTop;
+        const overlay = this.add.rectangle(
+            CENTRE_X,
+            overlayTop + overlayHeight / 2,
+            GAME_WIDTH,
+            overlayHeight,
+            0x000000,
+            INTRO_LAYOUT.OVERLAY_ALPHA
+        );
+        this.slideElements.push(overlay);
+
+        // Set depth: background at 0, overlay at 1, text at 2
+        overlay.setDepth(1);
+        title.setDepth(2);
+        bodyTexts.forEach(t => t.setDepth(2));
 
         // Skip button
         const skip = this.add.text(GAME_WIDTH - INTRO_LAYOUT.SKIP_MARGIN, INTRO_LAYOUT.SKIP_MARGIN, 'SKIP', TEXT_STYLES.INTRO_SKIP)

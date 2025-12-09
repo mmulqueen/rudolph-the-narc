@@ -2,12 +2,13 @@ import { Scene, Input, GameObjects } from 'phaser';
 import { Rudolph } from '../entities/Rudolph';
 import { Elf, createElf } from '../entities/Elf';
 import { StrobeEffect } from '../effects/StrobeEffect';
+import { createPowderBurst } from '../effects/PowderBurst';
 import { createButton } from '../ui/Button';
 import { Ref } from '../../refs';
 import { GAME_WIDTH, CENTRE_X, PLAYABLE_HEIGHT, CONTROL_HEIGHT, LANE_COUNT } from '../data/dimensions';
 import { ElfTypes, ElfType, isContrabandType, isSantaType, SANTA_SPAWN_THRESHOLD } from '../data/scoring';
 import { HORIZONTAL_MOVEMENT_Y_GRACE } from "../data/movement";
-import { COLOURS, TEXT_STYLES } from '../data/style';
+import { COLOURS } from '../data/style';
 import { CONTROL_BUTTONS } from '../data/ui';
 
 // Time without snow spawn before forcing a snow spawn
@@ -363,12 +364,12 @@ export class GameplayController {
             y: buttonY,
             width: buttonWidth,
             height: buttonHeight,
-            colour: COLOURS.BUTTON_GREY,
-            label: '<',
-            labelStyle: TEXT_STYLES.BUTTON,
+            colour: COLOURS.BUTTON_GREEN,
+            hoverColour: COLOURS.BUTTON_GREEN_HOVER,
+            icon: 'icon_arrow_left',
             onClick: () => this.moveLeft()
         });
-        this.trackObj(leftBtn.rect, leftBtn.text!);
+        this.trackObj(leftBtn.rect, leftBtn.icon!);
 
         // Nose button (centre) - state tracked via isPressed ref, handled in update loop
         const noseX = startX + buttonWidth + gap;
@@ -379,11 +380,11 @@ export class GameplayController {
             width: buttonWidth,
             height: buttonHeight,
             colour: COLOURS.BUTTON_RED,
-            label: 'NOSE',
-            labelStyle: TEXT_STYLES.BUTTON_SMALL
+            hoverColour: COLOURS.BUTTON_RED_HOVER,
+            icon: 'icon_alarm'
         });
         this.noseButtonPressed = noseBtn.isPressed;
-        this.trackObj(noseBtn.rect, noseBtn.text!);
+        this.trackObj(noseBtn.rect, noseBtn.icon!);
 
         // Right button
         const rightX = noseX + buttonWidth + gap;
@@ -393,12 +394,12 @@ export class GameplayController {
             y: buttonY,
             width: buttonWidth,
             height: buttonHeight,
-            colour: COLOURS.BUTTON_GREY,
-            label: '>',
-            labelStyle: TEXT_STYLES.BUTTON,
+            colour: COLOURS.BUTTON_GREEN,
+            hoverColour: COLOURS.BUTTON_GREEN_HOVER,
+            icon: 'icon_arrow_right',
             onClick: () => this.moveRight()
         });
-        this.trackObj(rightBtn.rect, rightBtn.text!);
+        this.trackObj(rightBtn.rect, rightBtn.icon!);
     }
 
     private stopElfInLane(lane: number): void {
@@ -450,6 +451,14 @@ export class GameplayController {
             const elfBounds = elf.getBounds();
 
             if (Phaser.Geom.Rectangle.Overlaps(rudolphBounds, elfBounds)) {
+                // Powder burst effect for contraband arrests
+                if (isContrabandType(elf.elfType)) {
+                    createPowderBurst(this.scene, {
+                        x: elf.x,
+                        y: elf.y
+                    });
+                }
+
                 // Arrest!
                 this.config.onArrest?.(elf);
                 this.removeElf(i);

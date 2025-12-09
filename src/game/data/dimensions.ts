@@ -1,17 +1,18 @@
 // Scale factor for higher resolution rendering
-// 1 = native (256x396), 2 = 2x (512x792), etc.
+// 1 = native (224x350), 2 = 2x (448x700), etc.
 export const SCALE_FACTOR = 2;
 
 // Game dimensions (scaled)
-export const GAME_WIDTH = 256 * SCALE_FACTOR;
-export const GAME_HEIGHT = 396 * SCALE_FACTOR;
-export const PLAYABLE_HEIGHT = 355 * SCALE_FACTOR;
+// Width = 7 lanes × 32px = 224px
+export const GAME_WIDTH = 224 * SCALE_FACTOR;
+export const GAME_HEIGHT = 350 * SCALE_FACTOR;
 export const CONTROL_HEIGHT = 41 * SCALE_FACTOR;
+export const PLAYABLE_HEIGHT = GAME_HEIGHT - CONTROL_HEIGHT;
 export const CENTRE_X = GAME_WIDTH / 2;
 
 // Lane system (scaled)
 export const LANE_WIDTH = 32 * SCALE_FACTOR;
-export const LANE_COUNT = 8;
+export const LANE_COUNT = 7;
 
 // Sprite dimensions (original asset size - NOT scaled)
 // Sprites are scaled at render time via setScale()
