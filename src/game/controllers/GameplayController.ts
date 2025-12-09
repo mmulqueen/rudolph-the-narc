@@ -8,6 +8,7 @@ import { GAME_WIDTH, CENTRE_X, PLAYABLE_HEIGHT, CONTROL_HEIGHT, LANE_COUNT } fro
 import { ELF_SPEED_MIN, ELF_SPEED_MAX } from '../data/movement';
 import { ElfTypes, ElfType } from '../data/scoring';
 import { COLOURS, TEXT_STYLES } from '../data/style';
+import { CONTROL_BUTTONS } from '../data/ui';
 
 export interface GameplayControllerConfig {
     scene: Scene;
@@ -279,9 +280,9 @@ export class GameplayController {
 
     private createControlButtons(): void {
         const buttonY = PLAYABLE_HEIGHT + CONTROL_HEIGHT / 2;
-        const buttonHeight = 36;
-        const buttonWidth = 60;
-        const gap = 4;
+        const buttonHeight = CONTROL_BUTTONS.HEIGHT;
+        const buttonWidth = CONTROL_BUTTONS.WIDTH;
+        const gap = CONTROL_BUTTONS.GAP;
         const totalWidth = (buttonWidth * 3) + (gap * 2);
         const startX = (GAME_WIDTH - totalWidth) / 2 + buttonWidth / 2;
 

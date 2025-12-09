@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { GAME_WIDTH, GAME_HEIGHT, CENTRE_X, SPRITE_OFF_SCREEN_OFFSET } from '../data/dimensions';
+import { GAME_WIDTH, GAME_HEIGHT, CENTRE_X, SPRITE_OFF_SCREEN_OFFSET, SCALE_FACTOR } from '../data/dimensions';
 import { BG_SCROLL_SPEED, ELF_SPEED_MIN } from '../data/movement';
 import { ElfTypes } from '../data/scoring';
 import { TEXT_STYLES } from '../data/style';
@@ -126,6 +126,7 @@ export class Intro extends Scene {
                 // Multiple elves with snow - moving upward
                 INTRO_LAYOUT.ELF_POSITIONS_SLIDE_0.forEach(pos => {
                     const elf = this.add.sprite(pos.x, pos.y, 'elf_snow');
+                    elf.setScale(SCALE_FACTOR);
                     elf.play('elf_snow_walk');
                     this.slideElements.push(elf);
                     this.movingSprites.push(elf);
@@ -136,12 +137,14 @@ export class Intro extends Scene {
                 // Rudolph in pursuit mode chasing an elf
                 // Add an elf being chased
                 const chasedElf = this.add.sprite(CENTRE_X, INTRO_LAYOUT.PURSUIT_ELF_Y, 'elf_snow');
+                chasedElf.setScale(SCALE_FACTOR);
                 chasedElf.play('elf_snow_walk');
                 this.slideElements.push(chasedElf);
                 this.movingSprites.push(chasedElf);
 
                 // Rudolph following behind
                 const rudolph = this.add.sprite(CENTRE_X, INTRO_LAYOUT.PURSUIT_RUDOLPH_Y, 'rudolph_pursuit');
+                rudolph.setScale(SCALE_FACTOR);
                 rudolph.play('rudolph_pursuit_walk');
                 this.slideElements.push(rudolph);
                 this.movingSprites.push(rudolph);
@@ -160,6 +163,7 @@ export class Intro extends Scene {
                 // Innocent elves - moving upward
                 INTRO_LAYOUT.ELF_POSITIONS_SLIDE_3.forEach(e => {
                     const elf = this.add.sprite(e.x, e.y, e.type);
+                    elf.setScale(SCALE_FACTOR);
                     elf.play(`${e.type}_walk`);
                     this.slideElements.push(elf);
                     this.movingSprites.push(elf);

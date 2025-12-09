@@ -1,3 +1,5 @@
+import { SCALE_FACTOR } from './dimensions';
+
 // UI Colours
 export const COLOURS = {
     BUTTON_GREY: 0x555555,
@@ -18,110 +20,113 @@ export const COLOURS = {
 // Typography
 export const FONT_FAMILY = 'Arial Black';
 
+// Helper to create scaled font size
+const scaledFontSize = (basePx: number): string => `${basePx * SCALE_FACTOR}px`;
+
 // Text styles
 export const TEXT_STYLES = {
     TITLE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '24px',
+        fontSize: scaledFontSize(24),
         color: '#ff0000',
         stroke: '#000000',
-        strokeThickness: 4
+        strokeThickness: 4 * SCALE_FACTOR
     },
     GAME_OVER_TITLE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '28px',
+        fontSize: scaledFontSize(28),
         color: '#ffffff',
         stroke: '#000000',
-        strokeThickness: 4
+        strokeThickness: 4 * SCALE_FACTOR
     },
     SCORE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '14px',
+        fontSize: scaledFontSize(14),
         color: '#ffffff',
         stroke: '#000000',
-        strokeThickness: 2
+        strokeThickness: 2 * SCALE_FACTOR
     },
     FLASH_HEADER: {
         fontFamily: FONT_FAMILY,
-        fontSize: '16px',
+        fontSize: scaledFontSize(16),
         stroke: '#000000',
-        strokeThickness: 2,
+        strokeThickness: 2 * SCALE_FACTOR,
         align: 'center'
     },
     FLASH_MESSAGE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '9px',
+        fontSize: scaledFontSize(9),
         color: '#ffffff',
         align: 'center'
     },
     BUTTON: {
         fontFamily: FONT_FAMILY,
-        fontSize: '24px',
+        fontSize: scaledFontSize(24),
         color: '#ffffff'
     },
     BUTTON_SMALL: {
         fontFamily: FONT_FAMILY,
-        fontSize: '12px',
+        fontSize: scaledFontSize(12),
         color: '#ffffff'
     },
     // Intro slide styles
     INTRO_TITLE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '16px',
+        fontSize: scaledFontSize(16),
         color: '#ff0000',
         stroke: '#000000',
-        strokeThickness: 3,
+        strokeThickness: 3 * SCALE_FACTOR,
         align: 'center'
     },
     INTRO_BODY: {
         fontFamily: FONT_FAMILY,
-        fontSize: '10px',
+        fontSize: scaledFontSize(10),
         color: '#ffffff',
         align: 'center'
     },
     INTRO_SKIP: {
         fontFamily: FONT_FAMILY,
-        fontSize: '10px',
+        fontSize: scaledFontSize(10),
         color: '#888888'
     },
     INTRO_CONTINUE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '12px',
+        fontSize: scaledFontSize(12),
         color: '#ffff00'
     },
     INTRO_CONTINUE_INTERACTIVE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '10px',
+        fontSize: scaledFontSize(10),
         color: '#ffff00',
         backgroundColor: '#333333',
-        padding: { x: 8, y: 4 }
+        padding: { x: 8 * SCALE_FACTOR, y: 4 * SCALE_FACTOR }
     },
     // GameOver styles
     FINAL_SCORE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '24px',
+        fontSize: scaledFontSize(24),
         color: '#ffff00'
     },
     RESTART_PROMPT: {
         fontFamily: FONT_FAMILY,
-        fontSize: '16px',
+        fontSize: scaledFontSize(16),
         color: '#ffffff'
     },
     // MainMenu styles
     TAGLINE: {
         fontFamily: FONT_FAMILY,
-        fontSize: '12px',
+        fontSize: scaledFontSize(12),
         color: '#aaaaaa',
         align: 'center'
     },
     MENU_BUTTON_PLAY: {
         fontFamily: FONT_FAMILY,
-        fontSize: '18px',
+        fontSize: scaledFontSize(18),
         color: '#ffffff'
     },
     MENU_BUTTON_HOWTO: {
         fontFamily: FONT_FAMILY,
-        fontSize: '14px',
+        fontSize: scaledFontSize(14),
         color: '#ffffff'
     },
 } as const;

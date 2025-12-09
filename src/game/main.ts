@@ -5,13 +5,14 @@ import { MainMenu } from './scenes/MainMenu';
 import { Intro } from './scenes/Intro';
 import { AUTO, Game } from 'phaser';
 import { Preloader } from './scenes/Preloader';
+import { GAME_WIDTH, GAME_HEIGHT } from './data/dimensions';
 
 //  Find out more information about the Game Config at:
 //  https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
-    width: 256,
-    height: 396,
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
     parent: 'game-container',
     backgroundColor: '#1a472a',
     roundPixels: true,

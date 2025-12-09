@@ -1,5 +1,5 @@
 import { GameObjects, Scene } from 'phaser';
-import { PLAYABLE_HEIGHT, SPRITE_OFF_SCREEN_OFFSET, getLaneX } from '../data/dimensions';
+import { PLAYABLE_HEIGHT, SPRITE_OFF_SCREEN_OFFSET, SCALE_FACTOR, getLaneX } from '../data/dimensions';
 import { ElfType, ElfTypes } from '../data/scoring';
 
 export class Elf extends GameObjects.Sprite {
@@ -20,6 +20,7 @@ export class Elf extends GameObjects.Sprite {
         this.speed = speed;
 
         scene.add.existing(this);
+        this.setScale(SCALE_FACTOR);
         this.play(`${spriteKey}_walk`);
     }
 

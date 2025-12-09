@@ -44,11 +44,15 @@ Located in `public/assets/sprites/`. Each sprite sheet is 64x64 (two 32x64 frame
 
 ## Technical Details
 
-- Canvas: 256x396 (playable area: 256x355, controls: 256x41)
+- Canvas: 256x396 logical resolution (playable area: 256x355, controls: 256x41)
 - 8 horizontal positions (32px lanes)
 - Canvas centred on screen, scaled to fit (CSS contain behavior)
 - Maximum 1 elf per horizontal position at a time
 - Elves spawn with randomised speeds
+
+### Resolution Scaling
+
+The game renders internally at a multiple of the logical resolution for crisp text and UI, then Phaser's scale manager fits this to the display. Sprites use their original 32x64 pixel assets scaled up at render time. The `SCALE_FACTOR` constant in `src/game/data/dimensions.ts` controls this multiplier and can be adjusted for different quality/performance tradeoffs.
 
 ---
 

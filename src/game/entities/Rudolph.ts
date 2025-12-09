@@ -1,17 +1,18 @@
 import { GameObjects, Scene } from 'phaser';
-import { LANE_COUNT, PLAYABLE_HEIGHT, getLaneX } from '../data/dimensions';
+import { LANE_COUNT, PLAYABLE_HEIGHT, SCALE_FACTOR, RUDOLPH_START_LANE, RUDOLPH_Y_OFFSET, getLaneX } from '../data/dimensions';
 
 export class Rudolph extends GameObjects.Sprite {
-    private currentLane: number = 3;
+    private currentLane: number = RUDOLPH_START_LANE;
     private isPursuitMode: boolean = false;
 
     constructor(scene: Scene) {
-        const startX = getLaneX(3);
-        const startY = PLAYABLE_HEIGHT - 40;
+        const startX = getLaneX(RUDOLPH_START_LANE);
+        const startY = PLAYABLE_HEIGHT - RUDOLPH_Y_OFFSET;
 
         super(scene, startX, startY, 'rudolph_patrol');
 
         scene.add.existing(this);
+        this.setScale(SCALE_FACTOR);
         this.play('rudolph_patrol_walk');
     }
 

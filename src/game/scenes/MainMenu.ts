@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { CENTRE_X } from '../data/dimensions';
+import { CENTRE_X, SCALE_FACTOR } from '../data/dimensions';
 import { COLOURS, TEXT_STYLES } from '../data/style';
 import { MENU_LAYOUT } from '../data/ui';
 import { createButton } from '../ui/Button';
@@ -18,6 +18,7 @@ export class MainMenu extends Scene {
 
         // Animated Rudolph preview
         const rudolph = this.add.sprite(CENTRE_X, MENU_LAYOUT.RUDOLPH_PREVIEW_Y, 'rudolph_patrol');
+        rudolph.setScale(SCALE_FACTOR);
         rudolph.play('rudolph_patrol_walk');
 
         // Tagline

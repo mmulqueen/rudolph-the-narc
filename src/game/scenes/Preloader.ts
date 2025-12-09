@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { CENTRE_X, GAME_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT } from '../data/dimensions';
+import { CENTRE_X, GAME_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, SCALE_FACTOR } from '../data/dimensions';
 import { ANIMATION_FRAME_RATE, ANIMATION_REPEAT } from '../data/movement';
 
 export class Preloader extends Scene {
@@ -11,13 +11,18 @@ export class Preloader extends Scene {
         const centreY = GAME_HEIGHT / 2;
 
         // Progress bar outline
-        this.add.rectangle(CENTRE_X, centreY, 200, 20).setStrokeStyle(1, 0xffffff);
+        const barWidth = 200 * SCALE_FACTOR;
+        const barHeight = 20 * SCALE_FACTOR;
+        this.add.rectangle(CENTRE_X, centreY, barWidth, barHeight).setStrokeStyle(1 * SCALE_FACTOR, 0xffffff);
 
         // Progress bar fill
-        const bar = this.add.rectangle(CENTRE_X - 95, centreY, 4, 16, 0xffffff);
+        const fillHeight = 16 * SCALE_FACTOR;
+        const fillStartWidth = 4 * SCALE_FACTOR;
+        const fillMaxWidth = (barWidth - 10 * SCALE_FACTOR);
+        const bar = this.add.rectangle(CENTRE_X - (barWidth / 2) + (fillStartWidth / 2) + (5 * SCALE_FACTOR), centreY, fillStartWidth, fillHeight, 0xffffff);
 
         this.load.on('progress', (progress: number) => {
-            bar.width = 4 + (190 * progress);
+            bar.width = fillStartWidth + (fillMaxWidth * progress);
         });
     }
 
