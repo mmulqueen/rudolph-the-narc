@@ -111,15 +111,18 @@ export class Intro extends Scene {
     }
 
     private setupSlideVisuals(index: number): void {
-        // Add scrolling background for all slides
-        this.scrollingBgTile = this.add.tileSprite(
-            CENTRE_X,
-            GAME_HEIGHT / 2,
-            GAME_WIDTH,
-            GAME_HEIGHT,
-            'bg_tile'
-        );
-        this.slideElements.push(this.scrollingBgTile);
+        // Add scrolling background for non-interactive slides
+        // Interactive slide (case 2) uses GameplayController which creates its own background
+        if (index !== 2) {
+            this.scrollingBgTile = this.add.tileSprite(
+                CENTRE_X,
+                GAME_HEIGHT / 2,
+                GAME_WIDTH,
+                GAME_HEIGHT,
+                'bg_tile'
+            );
+            this.slideElements.push(this.scrollingBgTile);
+        }
 
         switch (index) {
             case 0:
@@ -173,19 +176,16 @@ export class Intro extends Scene {
     }
 
     private setupInteractiveDemo(): void {
-        // Background is already created by setupSlideVisuals (scrollingBgTile)
-
         // Create controller for interactive demo
         this.controller = new GameplayController({
             scene: this,
+            bgScrollSpeed: BG_SCROLL_SPEED,
             onArrest: () => {}, // No scoring in demo
             onEscape: () => {},
             elfTypePool: [ElfTypes.SNOW], // Only snow elves
             maxElves: 2,
             spawnInterval: 0, // Don't use timer, use ensureElfCount instead
-            showStrobe: true,
-            bgScrollSpeed: BG_SCROLL_SPEED,
-            showBackground: false // We handle background separately for full-screen coverage
+            showStrobe: true
         });
         this.controller.create();
 

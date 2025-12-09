@@ -16,7 +16,8 @@ export const LANE_COUNT = 8;
 // Sprite dimensions (original asset size - NOT scaled)
 // Sprites are scaled at render time via setScale()
 export const SPRITE_WIDTH = 32;
-export const SPRITE_HEIGHT = 64;
+export const ELF_SPRITE_HEIGHT = 40;
+export const RUDOLPH_SPRITE_HEIGHT = 53;
 export const SPRITE_OFF_SCREEN_OFFSET = 32 * SCALE_FACTOR;
 
 // Rudolph positioning

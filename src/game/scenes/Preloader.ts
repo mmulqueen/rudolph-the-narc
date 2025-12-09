@@ -1,5 +1,5 @@
 import { Scene } from 'phaser';
-import { CENTRE_X, GAME_HEIGHT, SPRITE_WIDTH, SPRITE_HEIGHT, SCALE_FACTOR } from '../data/dimensions';
+import { CENTRE_X, GAME_HEIGHT, SPRITE_WIDTH, ELF_SPRITE_HEIGHT, RUDOLPH_SPRITE_HEIGHT, SCALE_FACTOR } from '../data/dimensions';
 import { ANIMATION_FRAME_RATE, ANIMATION_REPEAT } from '../data/movement';
 
 export class Preloader extends Scene {
@@ -27,17 +27,20 @@ export class Preloader extends Scene {
     }
 
     preload() {
-        const spriteConfig = { frameWidth: SPRITE_WIDTH, frameHeight: SPRITE_HEIGHT };
+        const rudolphConfig = { frameWidth: SPRITE_WIDTH, frameHeight: RUDOLPH_SPRITE_HEIGHT };
+        const elfConfig = { frameWidth: SPRITE_WIDTH, frameHeight: ELF_SPRITE_HEIGHT };
 
         // Load character spritesheets
         this.load.setPath('assets/sprites');
-        this.load.spritesheet('rudolph_patrol', 'rudolph_on_patrol.png', spriteConfig);
-        this.load.spritesheet('rudolph_pursuit', 'rudolph_in_pursuit.png', spriteConfig);
-        this.load.spritesheet('elf_snow', 'elf_with_snow.png', spriteConfig);
-        this.load.spritesheet('elf_teddy', 'elf_with_teddy.png', spriteConfig);
-        this.load.spritesheet('elf_candy', 'elf_with_candy.png', spriteConfig);
-        this.load.spritesheet('elf_coal', 'elf_with_coal.png', spriteConfig);
-        this.load.spritesheet('elf_nothing', 'elf_with_nothing.png', spriteConfig);
+        this.load.spritesheet('rudolph_patrol', 'rudolph_on_patrol_trimmed.png', rudolphConfig);
+        this.load.spritesheet('rudolph_pursuit', 'rudolph_in_pursuit_trimmed.png', rudolphConfig);
+        this.load.spritesheet('elf_snow', 'elf_with_snow_trimmed.png', elfConfig);
+        this.load.spritesheet('elf_teddy', 'elf_with_teddy_trimmed.png', elfConfig);
+        this.load.spritesheet('elf_candy', 'elf_with_candy_trimmed.png', elfConfig);
+        this.load.spritesheet('elf_coal', 'elf_with_coal_trimmed.png', elfConfig);
+        this.load.spritesheet('elf_nothing', 'elf_with_nothing_trimmed.png', elfConfig);
+        this.load.spritesheet('santa_snow', 'santa_with_snow_trimmed.png', elfConfig);
+        this.load.spritesheet('santa_nothing', 'santa_with_nothing_trimmed.png', elfConfig);
 
         // Load background tile
         this.load.setPath('assets');
@@ -53,7 +56,9 @@ export class Preloader extends Scene {
             'elf_teddy',
             'elf_candy',
             'elf_coal',
-            'elf_nothing'
+            'elf_nothing',
+            'santa_snow',
+            'santa_nothing'
         ];
 
         sprites.forEach(key => {

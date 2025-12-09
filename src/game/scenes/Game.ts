@@ -2,8 +2,7 @@ import { Scene } from 'phaser';
 import { GameplayController } from '../controllers/GameplayController';
 import { FlashMessage } from '../ui/FlashMessage';
 import { TEXT_STYLES } from '../data/style';
-import { ElfTypes, SCORE_CONTRABAND, SCORE_WRONGFUL, SCORE_ESCAPE, SCORE_WIN_THRESHOLD, SCORE_LOSE_THRESHOLD } from '../data/scoring';
-import { MESSAGES_BUSTED, MESSAGES_WRONGFUL, MESSAGES_ESCAPED } from '../data/gameMessages';
+import { ElfTypes, SCORE_WIN_THRESHOLD, SCORE_LOSE_THRESHOLD } from '../data/scoring';
 import { ELF_SPAWN_INTERVAL_MS, BG_SCROLL_SPEED } from '../data/movement';
 import { UI_COMMON } from '../data/ui';
 
@@ -24,21 +23,19 @@ export class Game extends Scene {
         // Create gameplay controller with game-specific config
         this.controller = new GameplayController({
             scene: this,
-            onArrest: (_elf, isContraband) => {
-                this.addScore(isContraband ? SCORE_CONTRABAND : SCORE_WRONGFUL);
-                if (isContraband) {
-                    const msg = Phaser.Math.RND.pick(MESSAGES_BUSTED);
-                    this.flashMessage.show('BUSTED!', msg, 0x00ff00);
-                } else {
-                    const msg = Phaser.Math.RND.pick(MESSAGES_WRONGFUL);
-                    this.flashMessage.show('WRONGFUL ARREST!', msg, 0xff0000);
-                }
+            bgScrollSpeed: BG_SCROLL_SPEED,
+            getScore: () => this.score,
+            onArrest: (elf) => {
+                const event = elf.getArrestEvent();
+                this.addScore(event.scoreDelta);
+                const colour = event.scoreDelta > 0 ? 0x00ff00 : 0xff0000;
+                this.flashMessage.show(event.header, event.message, colour);
             },
             onEscape: (elf) => {
-                if (elf.isContraband()) {
-                    this.addScore(SCORE_ESCAPE);
-                    const msg = Phaser.Math.RND.pick(MESSAGES_ESCAPED);
-                    this.flashMessage.show('ESCAPED!', msg, 0xff0000);
+                const event = elf.getEscapeEvent();
+                if (event) {
+                    this.addScore(event.scoreDelta);
+                    this.flashMessage.show(event.header, event.message, 0xff0000);
                 }
             },
             elfTypePool: [
@@ -51,12 +48,12 @@ export class Game extends Scene {
                 ElfTypes.COAL,
                 ElfTypes.NOTHING,
                 ElfTypes.NOTHING,
-                ElfTypes.NOTHING
+                ElfTypes.NOTHING,
+                ElfTypes.SANTA_SNOW,
+                ElfTypes.SANTA_NOTHING
             ],
             spawnInterval: ELF_SPAWN_INTERVAL_MS,
-            showStrobe: true,
-            bgScrollSpeed: BG_SCROLL_SPEED,
-            showBackground: true
+            showStrobe: true
         });
         this.controller.create();
 
@@ -72,12 +69,23 @@ export class Game extends Scene {
         this.score += points;
         this.scoreText.setText(`Score: ${this.score}`);
 
+        // Update difficulty based on progress toward win threshold
+        this.updateDifficulty();
+
         // Check win/lose conditions
         if (this.score >= SCORE_WIN_THRESHOLD) {
             this.endGame(true);
         } else if (this.score <= SCORE_LOSE_THRESHOLD) {
             this.endGame(false);
         }
+    }
+
+    private updateDifficulty(): void {
+        // Ramp difficulty from 1.0 to 2.0 as score goes from 0 to 100
+        // Only increase difficulty for positive scores
+        const progress = Math.max(0, this.score) / SCORE_WIN_THRESHOLD;
+        const difficulty = 1.0 + progress;
+        this.controller.setDifficulty(difficulty);
     }
 
     private endGame(isWin: boolean): void {

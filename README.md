@@ -10,14 +10,19 @@ A vertically scrolling arcade game where you control Rudolph patrolling the work
 - **Scrolling**: Background scrolls top-to-bottom creating forward motion; elves spawn at bottom and travel upward
 - **Pursuit**: Activate Rudolph's police nose to stop an elf in their tracks. Collide with them while the nose is active to make an arrest
 - **Scoring**: Arrest elves carrying contraband (snow) for points. Wrongfully arresting elves with legitimate goods (teddy bear, candy cane, coal) is bad!
+- **Difficulty**: Game speed increases as your score rises, making it harder to distinguish elves
+- **Santa**: Once you reach 50 points, Santa himself may appear - catch him with snow for double points, but arresting innocent Santa is twice as bad!
 
 ### Scoring
 
 | Event | Points |
 |-------|--------|
 | Arrest elf with snow (contraband) | +10 |
-| Arrest innocent elf (teddy/candy/coal) | -2 |
+| Arrest innocent elf (teddy/candy/coal/nothing) | -2 |
 | Elf with snow escapes | -5 |
+| Arrest Santa with snow | +20 |
+| Arrest innocent Santa | -4 |
+| Santa with snow escapes | -10 |
 
 ### Controls
 
@@ -32,15 +37,22 @@ A vertically scrolling arcade game where you control Rudolph patrolling the work
 
 ## Sprites
 
-Located in `public/assets/sprites/`. Each sprite sheet is 64x64 (two 32x64 frames side by side):
+Located in `public/assets/sprites/`. Sprite sheets are two frames side by side (32px width per frame):
 
-- `elf_with_snow.png` - Contraband carrier (arrest!)
-- `elf_with_teddy.png` - Legitimate goods
-- `elf_with_candy.png` - Legitimate goods
-- `elf_with_coal.png` - Legitimate goods
-- `elf_with_nothing.png` - Empty-handed elf
-- `rudolph_on_patrol.png` - Red nose (normal state)
-- `rudolph_in_pursuit.png` - Red/blue flashing nose (pursuit mode)
+**Elves** (32x40 frames):
+- `elf_with_snow_trimmed.png` - Contraband carrier (arrest!)
+- `elf_with_teddy_trimmed.png` - Legitimate goods
+- `elf_with_candy_trimmed.png` - Legitimate goods
+- `elf_with_coal_trimmed.png` - Legitimate goods
+- `elf_with_nothing_trimmed.png` - Empty-handed elf
+
+**Santa** (32x40 frames, appears after 50 points):
+- `santa_with_snow_trimmed.png` - Santa carrying contraband (double points!)
+- `santa_with_nothing_trimmed.png` - Innocent Santa
+
+**Rudolph** (32x53 frames):
+- `rudolph_on_patrol_trimmed.png` - Red nose (normal state)
+- `rudolph_in_pursuit_trimmed.png` - Red/blue flashing nose (pursuit mode)
 
 ## Technical Details
 

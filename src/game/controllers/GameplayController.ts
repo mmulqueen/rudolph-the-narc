@@ -1,25 +1,28 @@
 import { Scene, Input, GameObjects } from 'phaser';
 import { Rudolph } from '../entities/Rudolph';
-import { Elf } from '../entities/Elf';
+import { Elf, createElf } from '../entities/Elf';
 import { StrobeEffect } from '../effects/StrobeEffect';
 import { createButton } from '../ui/Button';
 import { Ref } from '../../refs';
 import { GAME_WIDTH, CENTRE_X, PLAYABLE_HEIGHT, CONTROL_HEIGHT, LANE_COUNT } from '../data/dimensions';
-import { ELF_SPEED_MIN, ELF_SPEED_MAX } from '../data/movement';
-import { ElfTypes, ElfType } from '../data/scoring';
+import { ElfTypes, ElfType, isContrabandType, isSantaType, SANTA_SPAWN_THRESHOLD } from '../data/scoring';
+import { HORIZONTAL_MOVEMENT_Y_GRACE } from "../data/movement";
 import { COLOURS, TEXT_STYLES } from '../data/style';
 import { CONTROL_BUTTONS } from '../data/ui';
 
+// Time without snow spawn before forcing a snow spawn
+const GUARANTEED_SNOW_INTERVAL_MS = 6000;
+
 export interface GameplayControllerConfig {
     scene: Scene;
-    onArrest?: (elf: Elf, isContraband: boolean) => void;
+    bgScrollSpeed: number;
+    onArrest?: (elf: Elf) => void;
     onEscape?: (elf: Elf) => void;
     elfTypePool?: ElfType[];
+    getScore?: () => number;
     maxElves?: number;
     spawnInterval?: number;
     showStrobe?: boolean;
-    bgScrollSpeed?: number;
-    showBackground?: boolean;
 }
 
 export class GameplayController {
@@ -46,10 +49,17 @@ export class GameplayController {
 
     // Visuals
     private strobeEffect?: StrobeEffect;
-    private bgTile?: GameObjects.TileSprite;
+    private bgTile!: GameObjects.TileSprite;
 
     // Spawning
     private spawnTimer: number = 0;
+    private timeSinceLastSnow: number = 0;
+
+    // Difficulty scaling (1.0 = normal, higher = harder)
+    private difficultyMultiplier: number = 1.0;
+
+    // Pending movement intent: -1 = left, 0 = none, 1 = right
+    private pendingMove: -1 | 0 | 1 = 0;
 
     // Track all created game objects for cleanup
     private gameObjects: GameObjects.GameObject[] = [];
@@ -60,11 +70,10 @@ export class GameplayController {
             onArrest: () => {},
             onEscape: () => {},
             elfTypePool: [ElfTypes.SNOW],
+            getScore: () => 0,
             maxElves: 0,
             spawnInterval: 0,
             showStrobe: true,
-            bgScrollSpeed: 0,
-            showBackground: true,
             ...config
         };
     }
@@ -74,18 +83,17 @@ export class GameplayController {
         this.laneOccupied = new Array(LANE_COUNT).fill(false);
         this.noseActive = false;
         this.spawnTimer = 0;
+        this.timeSinceLastSnow = 0;
 
-        // Create background if enabled
-        if (this.config.showBackground) {
-            this.bgTile = this.scene.add.tileSprite(
-                CENTRE_X,
-                PLAYABLE_HEIGHT / 2,
-                GAME_WIDTH,
-                PLAYABLE_HEIGHT,
-                'bg_tile'
-            );
-            this.trackObj(this.bgTile);
-        }
+        // Create background
+        this.bgTile = this.scene.add.tileSprite(
+            CENTRE_X,
+            PLAYABLE_HEIGHT / 2,
+            GAME_WIDTH,
+            PLAYABLE_HEIGHT,
+            'bg_tile'
+        );
+        this.trackObj(this.bgTile);
 
         // Create strobe effect (behind sprites, so created early)
         if (this.config.showStrobe) {
@@ -115,29 +123,35 @@ export class GameplayController {
     }
 
     update(delta: number): void {
-        // Handle keyboard input
-        this.handleKeyboardInput();
-
-        // Update background scroll
-        if (this.bgTile && this.config.bgScrollSpeed) {
-            this.bgTile.tilePositionY -= this.config.bgScrollSpeed * (delta / 1000);
-        }
+        // Update background scroll (speed increases with difficulty)
+        const scrollSpeed = this.config.bgScrollSpeed * this.difficultyMultiplier;
+        this.bgTile.tilePositionY -= scrollSpeed * (delta / 1000);
 
         // Update strobe effect during pursuit
         if (this.noseActive && this.strobeEffect) {
             this.strobeEffect.update(delta);
         }
 
-        // Update elves
+        // Update elves before handling input so collision check uses current positions
         this.updateElves(delta);
+
+        // Try to execute pending move now that elves have moved
+        this.tryExecutePendingMove();
+
+        // Handle keyboard input (may set new pending move)
+        this.handleKeyboardInput();
 
         // Check collisions
         this.checkCollisions();
 
-        // Timed spawning
+        // Track time since last snow spawn
+        this.timeSinceLastSnow += delta;
+
+        // Timed spawning (interval decreases with difficulty)
         if (this.config.spawnInterval && this.config.spawnInterval > 0) {
             this.spawnTimer += delta;
-            if (this.spawnTimer >= this.config.spawnInterval) {
+            const adjustedInterval = this.config.spawnInterval / this.difficultyMultiplier;
+            if (this.spawnTimer >= adjustedInterval) {
                 this.spawnTimer = 0;
                 this.spawnElf();
             }
@@ -170,21 +184,77 @@ export class GameplayController {
         if (availableLanes.length === 0) return;
 
         const lane = Phaser.Math.RND.pick(availableLanes);
-        const elfType = type ?? Phaser.Math.RND.pick(this.config.elfTypePool!);
-        const speed = Phaser.Math.Between(ELF_SPEED_MIN, ELF_SPEED_MAX);
-
-        const elf = new Elf(this.scene, lane, elfType, speed);
+        const elfType = type ?? Phaser.Math.RND.pick(this.getAvailableElfTypes());
+        const elf = createElf(this.scene, lane, elfType, this.difficultyMultiplier);
         this.elves.push(elf);
         this.laneOccupied[lane] = true;
         this.trackObj(elf);
+
+        // Reset snow timer if we spawned contraband
+        if (isContrabandType(elfType)) {
+            this.timeSinceLastSnow = 0;
+        }
+    }
+
+    private getAvailableElfTypes(): ElfType[] {
+        const pool = this.config.elfTypePool!;
+
+        const score = this.config.getScore!();
+        const santaAlreadyActive = this.elves.some(e => e.isSanta);
+        const santaAllowed = score >= SANTA_SPAWN_THRESHOLD && !santaAlreadyActive;
+        const forceContraband = this.timeSinceLastSnow >= GUARANTEED_SNOW_INTERVAL_MS;
+
+        return pool.filter(type =>
+            (santaAllowed || !isSantaType(type)) &&
+            (!forceContraband || isContrabandType(type))
+        );
+    }
+
+    setDifficulty(multiplier: number): void {
+        if (multiplier === this.difficultyMultiplier) return;
+        this.difficultyMultiplier = multiplier;
+        // Update Rudolph's animation speed to match new scroll speed
+        const scrollSpeed = this.config.bgScrollSpeed * this.difficultyMultiplier;
+        this.rudolph.setAnimationSpeed(scrollSpeed);
     }
 
     moveLeft(): void {
-        this.rudolph.moveLeft();
+        this.pendingMove = -1;
+        this.tryExecutePendingMove();
     }
 
     moveRight(): void {
-        this.rudolph.moveRight();
+        this.pendingMove = 1;
+        this.tryExecutePendingMove();
+    }
+
+    private tryExecutePendingMove(): void {
+        if (this.pendingMove === 0) return;
+
+        const targetLane = this.rudolph.getCurrentLane() + this.pendingMove;
+        if (targetLane < 0 || targetLane >= LANE_COUNT) {
+            this.pendingMove = 0;
+            return;
+        }
+
+        if (!this.wouldCollide(targetLane)) {
+            if (this.pendingMove === -1) {
+                this.rudolph.moveLeft();
+            } else {
+                this.rudolph.moveRight();
+            }
+            this.pendingMove = 0;
+        }
+    }
+
+    private wouldCollide(lane: number): boolean {
+        const rudolphTop = this.rudolph.getBounds().top;
+        // Can't move into lane if there's an elf that hasn't passed Rudolph yet
+        return this.elves.some(elf => {
+            if (elf.lane !== lane) return false;
+            const elfBottom = elf.getBounds().bottom - HORIZONTAL_MOVEMENT_Y_GRACE;
+            return elfBottom >= rudolphTop;
+        });
     }
 
     activateNose(): void {
@@ -250,13 +320,13 @@ export class GameplayController {
         if (Phaser.Input.Keyboard.JustDown(this.cursors.left) ||
             Phaser.Input.Keyboard.JustDown(this.keyA) ||
             Phaser.Input.Keyboard.JustDown(this.key4)) {
-            this.rudolph.moveLeft();
+            this.moveLeft();
         }
 
         if (Phaser.Input.Keyboard.JustDown(this.cursors.right) ||
             Phaser.Input.Keyboard.JustDown(this.keyD) ||
             Phaser.Input.Keyboard.JustDown(this.key6)) {
-            this.rudolph.moveRight();
+            this.moveRight();
         }
 
         // Nose activation (hold) - combine keyboard and button input
@@ -333,7 +403,7 @@ export class GameplayController {
 
     private stopElfInLane(lane: number): void {
         this.elves.forEach(elf => {
-            if (elf.getLane() === lane) {
+            if (elf.lane === lane) {
                 elf.freeze();
             }
         });
@@ -360,7 +430,7 @@ export class GameplayController {
 
     private removeElf(index: number): void {
         const elf = this.elves[index];
-        this.laneOccupied[elf.getLane()] = false;
+        this.laneOccupied[elf.lane] = false;
         elf.destroy();
         this.elves.splice(index, 1);
         this.untrackObj(elf);
@@ -375,13 +445,13 @@ export class GameplayController {
         for (let i = this.elves.length - 1; i >= 0; i--) {
             const elf = this.elves[i];
 
-            if (elf.getLane() !== rudolphLane) continue;
+            if (elf.lane !== rudolphLane) continue;
 
             const elfBounds = elf.getBounds();
 
             if (Phaser.Geom.Rectangle.Overlaps(rudolphBounds, elfBounds)) {
                 // Arrest!
-                this.config.onArrest?.(elf, elf.isContraband());
+                this.config.onArrest?.(elf);
                 this.removeElf(i);
             }
         }

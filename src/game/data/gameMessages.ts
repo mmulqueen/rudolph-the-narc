@@ -16,3 +16,16 @@ export const MESSAGES_ESCAPED = [
     "Looks like it's gonna be a white Christmas after all...",
     "Ho ho NO! That powder's heading to the workshop!"
 ];
+
+// Santa-specific messages
+export const MESSAGES_SANTA_BUSTED = [
+    "Rudolph I thought we were mates"
+];
+
+export const MESSAGES_SANTA_WRONGFUL = [
+    "Carry on like this and I'll get an LED nose for Blitzen."
+];
+
+export const MESSAGES_SANTA_ESCAPED = [
+    "Don't worry Rudolph, I'll make this snow disappear, ho ho ho"
+];

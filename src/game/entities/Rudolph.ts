@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 import { LANE_COUNT, PLAYABLE_HEIGHT, SCALE_FACTOR, RUDOLPH_START_LANE, RUDOLPH_Y_OFFSET, getLaneX } from '../data/dimensions';
+import { BG_SCROLL_SPEED } from '../data/movement';
 
 export class Rudolph extends GameObjects.Sprite {
     private currentLane: number = RUDOLPH_START_LANE;
@@ -48,5 +49,10 @@ export class Rudolph extends GameObjects.Sprite {
 
     getCurrentLane(): number {
         return this.currentLane;
+    }
+
+    setAnimationSpeed(scrollSpeed: number): void {
+        // Scale animation proportional to background scroll speed
+        this.anims.timeScale = scrollSpeed / BG_SCROLL_SPEED;
     }
 }
