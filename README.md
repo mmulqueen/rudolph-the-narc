@@ -1,8 +1,16 @@
+<p align="center">
+  <img src="misc/logo.png" alt="Rudolph the Narc" width="128" height="128">
+</p>
+
 # Rudolph the Narc
 
 **[Play the game](https://michael.mulqueen.me.uk/2025/rudolph-the-narc/)** | **[GitHub](https://github.com/mmulqueen/rudolph-the-narc)**
 
 The North Pole has got a problem with white powder. Santa has been burning the advent candle at both ends and now a toxic snow-snorting culture has taken over the workshop. Mrs. Claus has tried to ban all frozen products from the workshop, but the pull of the flakes is strong. Noses are getting frozen off and the reindeers are angry that their carrot supply is being diverted to make nasal prostheses. Straight-edged Rudolph has had enough, he's putting his hoof down. Can you help Rudolph save Christmas? Patrol the workshop, intercept any snowy contraband, but don't disrupt the legitimate Christmas supplies.
+
+<p align="center">
+  <img src="misc/playthrough.png" alt="Gameplay">
+</p>
 
 ## About
 
@@ -47,22 +55,31 @@ A vertically scrolling arcade game where you control Rudolph patrolling the work
 
 ## Sprites
 
-Located in `public/assets/sprites/`. Sprite sheets are two frames side by side (32px width per frame):
+Located in `public/assets/sprites/`. Sprite sheets are two frames side by side (32px width per frame).
 
-**Elves** (32x40 frames):
-- `elf_with_snow_trimmed.png` - Contraband carrier (arrest!)
-- `elf_with_teddy_trimmed.png` - Legitimate goods
-- `elf_with_candy_trimmed.png` - Legitimate goods
-- `elf_with_coal_trimmed.png` - Legitimate goods
-- `elf_with_nothing_trimmed.png` - Empty-handed elf
+### Elves (32x40 frames)
 
-**Santa** (32x40 frames, appears after 50 points):
-- `santa_with_snow_trimmed.png` - Santa carrying contraband (double points!)
-- `santa_with_nothing_trimmed.png` - Innocent Santa
+| Sprite | File | Description |
+|--------|------|-------------|
+| <img src="misc/animated_sprites/elf_with_snow.png" width="64"> | `elf_with_snow_trimmed.png` | Contraband carrier (arrest!) |
+| <img src="misc/animated_sprites/elf_with_teddy.png" width="64"> | `elf_with_teddy_trimmed.png` | Legitimate goods |
+| <img src="misc/animated_sprites/elf_with_candy.png" width="64"> | `elf_with_candy_trimmed.png` | Legitimate goods |
+| <img src="misc/animated_sprites/elf_with_coal.png" width="64"> | `elf_with_coal_trimmed.png` | Legitimate goods |
+| <img src="misc/animated_sprites/elf_with_nothing.png" width="64"> | `elf_with_nothing_trimmed.png` | Empty-handed elf |
 
-**Rudolph** (32x53 frames):
-- `rudolph_on_patrol_trimmed.png` - Red nose (normal state)
-- `rudolph_in_pursuit_trimmed.png` - Red/blue flashing nose (pursuit mode)
+### Santa (32x40 frames, appears after 50 points)
+
+| Sprite | File | Description |
+|--------|------|-------------|
+| <img src="misc/animated_sprites/santa_with_snow.png" width="64"> | `santa_with_snow_trimmed.png` | Santa carrying contraband (double points!) |
+| <img src="misc/animated_sprites/santa_with_nothing.png" width="64"> | `santa_with_nothing_trimmed.png` | Innocent Santa |
+
+### Rudolph (32x53 frames)
+
+| Sprite | File | Description |
+|--------|------|-------------|
+| <img src="misc/animated_sprites/rudolph_on_patrol.png" width="64"> | `rudolph_on_patrol_trimmed.png` | Red nose (normal state) |
+| <img src="misc/animated_sprites/rudolph_in_pursuit.png" width="64"> | `rudolph_in_pursuit_trimmed.png` | Red/blue flashing nose (pursuit mode) |
 
 ## Technical Details
 
@@ -124,6 +141,18 @@ preload() {
 ### Production Build
 
 Run `yarn build` to create a production bundle in `dist/`. Upload the entire `dist` folder contents to deploy.
+
+## Animations in this README
+
+This README uses animated PNGs, scripts to generate them are in this repo.
+
+```sh
+# Regenerate sprite animations
+bash misc/make_animated_sprites.sh
+
+# Regenerate playthrough (with options)
+bash misc/make_playthrough_apng.sh -i misc/cap.mp4 -o misc/playthrough.png -c 64 -d 48.5
+```
 
 ---
 
