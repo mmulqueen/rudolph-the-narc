@@ -20,7 +20,7 @@ export const COLOURS = {
 } as const;
 
 // Typography
-export const FONT_FAMILY = 'Arial Black';
+export const FONT_FAMILY = '"Luckiest Guy", cursive';
 
 // Helper to create scaled font size
 const scaledFontSize = (basePx: number): string => `${basePx * SCALE_FACTOR}px`;
