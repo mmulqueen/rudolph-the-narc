@@ -5,14 +5,50 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="icon" type="image/gif" href="/favicon.gif" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A festive arcade game where Rudolph patrols Santa's workshop, intercepting elves smuggling contraband snow while avoiding wrongful arrests of innocent gift-carriers.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Rudolph the Narc">
+    <meta property="og:description" content="A festive arcade game where Rudolph patrols Santa's workshop, intercepting elves smuggling contraband snow.">
+    <meta property="og:image" content="https://michael.mulqueen.me.uk/2025/rudolph-the-narc/assets/logo.png">
+    <meta property="og:url" content="https://michael.mulqueen.me.uk/2025/rudolph-the-narc/">
+    <meta property="og:type" content="website">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://michael.mulqueen.me.uk/2025/rudolph-the-narc/">
+
     <link rel="stylesheet" href="/style.css">
     <title>Rudolph the Narc</title>
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Rudolph the Narc",
+        "description": "A festive arcade game where Rudolph patrols Santa's workshop, intercepting elves smuggling contraband snow while avoiding wrongful arrests of innocent gift-carriers.",
+        "url": "https://michael.mulqueen.me.uk/2025/rudolph-the-narc/",
+        "codeRepository": "https://github.com/mmulqueen/rudolph-the-narc",
+        "author": {
+            "@type": "Person",
+            "name": "Michael Mulqueen"
+        },
+        "genre": "Arcade",
+        "gamePlatform": "Web Browser",
+        "applicationCategory": "Game"
+    }
+    </script>
 </head>
 
 <body>
     <div id="app">
         <div id="game-container"></div>
     </div>
+    <noscript>
+        <h1>Rudolph the Narc</h1>
+        <p>A festive arcade game where Rudolph patrols Santa's workshop, intercepting elves smuggling contraband snow while avoiding wrongful arrests of innocent gift-carriers.</p>
+        <p>This game requires JavaScript to play. View the source code on <a href="https://github.com/mmulqueen/rudolph-the-narc">GitHub</a>.</p>
+    </noscript>
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
